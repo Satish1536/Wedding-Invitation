@@ -40,7 +40,7 @@ const CONFIG = {
 };
 
 const I18N = {
-  en:{ introSmall:"Shubh Vivah", introSub:"You are warmly invited", open:"Open invitation", tapStart:"Tap the circle to begin", contactsEyebrow:"Need help?", contactsTitle:"Contact us", contactsSub:"Copy a number, then paste it in your phone app to call.", copy:"Copy", copied:"Copied ✓", manual:"Now press Copy", tap:"Tap", holdHint:"Scrolling slowly · hold the screen to pause", together:"Together with their families",
+  en:{ introSmall:"Shubh Vivah", introSub:"You are warmly invited", open:"Open invitation", tapStart:"Tap the circle to begin", contactsEyebrow:"Need help?", contactsTitle:"Contact us", contactsSub:"Copy a number, then paste it in your phone app to call.", copy:"Copy", copied:"Copied ✓", manual:"Now press Copy", tap:"Tap", together:"Together with their families",
     weds:"weds", scroll:"Scroll ↓", blessingsEyebrow:"With blessings", inviteHead:"Join us for the wedding",
     invite:"request the honour of your presence as we celebrate the union of our children, and seek your blessings as they begin their journey together.",
     countEyebrow:"Counting down", countHead:"Until the wedding day", days:"Days", hours:"Hours", mins:"Minutes", secs:"Seconds",
@@ -51,7 +51,7 @@ const I18N = {
     foot:"Your presence is the greatest blessing we could ask for.", with:"With love ·",
     sapEyebrow:"Seven sacred steps", sapHead:"Saptapadi", sapLead:"Around the holy fire, the couple takes seven steps together, each one a promise.",
     step:"Step", steps:["Nourishment","Strength","Prosperity","Happiness","Family","Long life","Friendship"] },
-  hi:{ introSmall:"शुभ विवाह", introSub:"आप सादर आमंत्रित हैं", open:"निमंत्रण खोलें", tapStart:"शुरू करने के लिए गोले को छुएँ", contactsEyebrow:"सहायता चाहिए?", contactsTitle:"संपर्क करें", contactsSub:"नंबर कॉपी करें, फिर फ़ोन ऐप में पेस्ट कर कॉल करें।", copy:"कॉपी", copied:"कॉपी हो गया ✓", manual:"अब कॉपी करें", tap:"छुएँ", holdHint:"धीरे-धीरे स्क्रॉल हो रहा है · रोकने के लिए स्क्रीन को दबाए रखें", together:"अपने परिवारों के साथ",
+  hi:{ introSmall:"शुभ विवाह", introSub:"आप सादर आमंत्रित हैं", open:"निमंत्रण खोलें", tapStart:"शुरू करने के लिए गोले को छुएँ", contactsEyebrow:"सहायता चाहिए?", contactsTitle:"संपर्क करें", contactsSub:"नंबर कॉपी करें, फिर फ़ोन ऐप में पेस्ट कर कॉल करें।", copy:"कॉपी", copied:"कॉपी हो गया ✓", manual:"अब कॉपी करें", tap:"छुएँ", together:"अपने परिवारों के साथ",
     weds:"परिणय", scroll:"नीचे जाएँ ↓", blessingsEyebrow:"आशीर्वाद सहित", inviteHead:"विवाह में पधारें",
     invite:"अपने बच्चों के विवाह के शुभ अवसर पर आपकी गरिमामयी उपस्थिति एवं आशीर्वाद की कामना करते हैं।",
     countEyebrow:"उलटी गिनती", countHead:"विवाह के दिन तक", days:"दिन", hours:"घंटे", mins:"मिनट", secs:"सेकंड",
@@ -205,47 +205,6 @@ function fadeIn(){ if(!audio) return; audio.volume = 0; let v = 0; const s = set
 if (C.music) { audio = new Audio(C.music); audio.loop = true; audio.volume = 0; $('#mute').style.display = 'block';
   $('#mute').onclick = () => { audio.paused ? (audio.play().then(fadeIn), $('#mute').textContent='♫') : (audio.pause(), $('#mute').textContent='♪'); }; }
 
-/* ---------- slow auto-scroll: tap the circle to start, hold to pause, release to resume ---------- */
-const AUTO = { speed: 100 };            // pixels per second; lower = slower
-let autoOn = false, pos = 0, lastTs = 0;
-const holds = { touch:false, mouse:false, wheel:false, focus:false };
-const paused = () => holds.touch || holds.mouse || holds.wheel || holds.focus;
-let timers = {};
-function hold(kind) { clearTimeout(timers[kind]); holds[kind] = true; }
-function release(kind, delay = 250) {
-  clearTimeout(timers[kind]);
-  timers[kind] = setTimeout(() => { holds[kind] = false; pos = scrollY; }, delay);   // resume from wherever the user left it
-}
-function autoLoop(ts) {
-  if (!autoOn) return;
-  const dt = Math.min(64, ts - lastTs) / 1000; lastTs = ts;
-  const max = document.documentElement.scrollHeight - innerHeight;
-  if (Math.abs(scrollY - pos) > 3) pos = scrollY;          // user moved the page themselves
-  if (!paused()) {
-    pos = Math.min(max, pos + AUTO.speed * dt);
-    scrollTo({ top: pos, behavior: 'instant' });
-    if (pos >= max - 1) { autoOn = false; return; }        // reached the end
-  }
-  requestAnimationFrame(autoLoop);
-}
-function startAuto() {
-  if (autoOn) return;
-  autoOn = true; pos = scrollY; lastTs = performance.now(); requestAnimationFrame(autoLoop);
-  const hint = document.createElement('div'); hint.id = 'holdHint'; hint.textContent = t('holdHint'); document.body.appendChild(hint);
-  setTimeout(() => hint.classList.add('show'), 100); setTimeout(() => hint.classList.remove('show'), 4500);
-}
-// hold = pause, release = resume (touch and mouse)
-addEventListener('touchstart', () => hold('touch'), { passive:true });
-addEventListener('touchend',    () => release('touch'), { passive:true });
-addEventListener('touchcancel', () => release('touch'), { passive:true });
-addEventListener('mousedown', () => hold('mouse'));
-addEventListener('mouseup',   () => release('mouse', 150));
-addEventListener('wheel', () => { hold('wheel'); release('wheel', 1200); }, { passive:true });
-addEventListener('keydown', e => { if (['ArrowDown','ArrowUp','PageDown','PageUp',' ','Home','End'].includes(e.key)) { hold('wheel'); release('wheel', 1200); } });
-// don't scroll away while someone is typing in the RSVP form
-document.addEventListener('focusin',  e => { if (e.target.matches('input[type=text],textarea')) holds.focus = true; });
-document.addEventListener('focusout', e => { if (e.target.matches('input[type=text],textarea')) { holds.focus = false; pos = scrollY; } });
-
 // open intro: a tap anywhere on the first screen (or on the circle) opens the invitation
 let opened = false;
 const openInvite = () => {
@@ -253,7 +212,6 @@ const openInvite = () => {
   $('#intro').classList.add('open'); document.body.classList.remove('locked');
   $('.arch').classList.add('in');
   if (audio) audio.play().then(() => { $('#mute').textContent = '♫'; fadeIn(); }).catch(() => {});
-  setTimeout(startAuto, 1700);                              // after the circle reveal finishes
 };
 $('#intro').addEventListener('click', openInvite);           // anywhere on the first screen
 $('#openBtn').addEventListener('click', openInvite);         // the circle itself (also works with the keyboard)
@@ -281,8 +239,8 @@ async function copyNumber(b) {
   }
 }
 const cm = $('#cmodal');
-function openContacts()  { cm.hidden = false; holds.focus = true; $('#cClose').focus(); }          // pauses the auto-scroll
-function closeContacts() { cm.hidden = true; holds.focus = false; pos = scrollY; $('#contactBtn').focus(); }
+function openContacts()  { cm.hidden = false; $('#cClose').focus(); }
+function closeContacts() { cm.hidden = true; $('#contactBtn').focus(); }
 $('#contactBtn').onclick = openContacts; $('#cClose').onclick = closeContacts;
 cm.addEventListener('click', e => { if (e.target === cm) closeContacts(); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && !cm.hidden) closeContacts(); });

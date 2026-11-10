@@ -229,9 +229,6 @@ html[lang=hi] .seal small{letter-spacing:0;text-transform:none;font-size:.8rem}
 html[lang=hi] .taphint{letter-spacing:0;text-transform:none;font-size:.9rem}
 @keyframes orbpulse{50%{transform:scale(1.06);box-shadow:0 0 0 10px rgba(246,220,140,.14),0 0 0 11px var(--gold-2),0 0 70px rgba(246,220,140,.75)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-#holdHint{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:80;padding:9px 20px;border-radius:30px;
-  background:rgba(54,7,10,.92);color:var(--gold-2);border:1px solid var(--gold);font-size:.85rem;opacity:0;transition:opacity .5s,transform .5s;pointer-events:none;white-space:nowrap}
-#holdHint.show{opacity:1;transform:translate(-50%,0)}
 @media(max-height:800px){#intro .taphint{display:none}}
 
 /* ---- WhatsApp floating button ---- */
@@ -292,3 +289,8 @@ html[lang=hi] .ccopy{letter-spacing:0;text-transform:none;font-size:.9rem}
 html[lang=hi] .ccopy{font-size:.8rem}
 @media(max-width:360px){.csheet{width:100%}}
 .pcard .loc{font-size:.84rem;opacity:.75;margin-top:6px;line-height:1.45}
+
+/* ---- Mobile: no sideways overflow (white strip on the right) ---- */
+html,body{overflow-x:hidden;max-width:100%}
+#hero{position:relative}            /* its decorative ring was positioned against the screen, not the section */
+section,footer{overflow-x:clip}     /* slide-in animations can never widen the page */
