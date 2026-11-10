@@ -1,3 +1,8 @@
+/* ---------- always start at the top after a refresh ---------- */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';          // do not jump back to where the visitor was
+if (location.hash) history.replaceState(null, '', location.pathname + location.search);   // forget #families from the scroll arrow
+scrollTo(0, 0);
+addEventListener('pageshow', e => { if (e.persisted) scrollTo(0, 0); });           // also when the page comes back from the back/forward cache
 /* =====================  EDIT YOUR DETAILS HERE  ===================== */
 const HOME_MAP    = "https://maps.app.goo.gl/ickgWRhkXk3d8juX7?g_st=ac";        // everything except the 4 Dec wedding
 const WEDDING_MAP = "https://maps.app.goo.gl/saQ8zwNm8c75mWrG8?g_st=aw";   // 4 Dec: Shidh Sagar Bhawan, Forbesganj
@@ -208,9 +213,28 @@ function startMusic() {
   if (!audio || userPaused || !audio.paused) return;
   audio.play().then(() => { $('#mute').textContent = '♫'; fadeIn(); }).catch(() => {});
 }
-// Browsers only allow sound after a tap, click or key press. A scroll or swipe opens the page but cannot start sound,
-// so the next tap/click/key press starts the music.
+// Tap, click or key press: always allowed by browsers, so the music starts.
 ['click', 'touchend', 'pointerup', 'keydown'].forEach(ev => addEventListener(ev, startMusic, { passive: true }));
+// A real scroll (mouse wheel or swipe) also tries to start it. Browsers that allow sound without a tap (for example after the
+// visitor has used the site before) will play it; the others refuse quietly and the first tap starts it instead.
+let lastScrollTry = 0;
+['wheel', 'touchmove'].forEach(ev => addEventListener(ev, () => {
+  const now = Date.now(); if (now - lastScrollTry < 1200) return; lastScrollTry = now;
+  startMusic();
+}, { passive: true }));
+
+// Stop the music when the page is hidden (browser minimised, app switched, tab changed) and bring it back on return.
+let resumeOnReturn = false;
+document.addEventListener('visibilitychange', () => {
+  if (!audio) return;
+  if (document.hidden) {
+    if (!audio.paused) { resumeOnReturn = true; audio.pause(); $('#mute').textContent = '♪'; }
+  } else if (resumeOnReturn && !userPaused) {
+    resumeOnReturn = false;
+    audio.play().then(() => { $('#mute').textContent = '♫'; fadeIn(); }).catch(() => {});
+  }
+});
+addEventListener('pagehide', () => { if (audio) audio.pause(); });
 
 /* ---------- first page: scroll cue ---------- */
 // The cover is just the top of the page (no overlay, no fade). Until the visitor scrolls, the page gives a small
