@@ -133,7 +133,7 @@ function render() {
   $$('[data-i18n]').forEach(e => e.textContent = t(e.dataset.i18n));
   const g = C.groom[lang], b = C.bride[lang];
   document.title = `${g} & ${b} · ${t('introSmall')}`;
-  $('#introG').textContent = g; $('#introB').textContent = b;
+  $('#introG').textContent = g; $('#introB').textContent = b; $('#gateNames').textContent = `${g} & ${b}`;
   $('#introDate').innerHTML = `<span class="dw">${fmt(wd,{weekday:'long'})}</span>${fmt(wd,{day:'numeric',month:'long',year:'numeric'})}`;
   $('#introCity').textContent = C.city[lang]; $('#introFam').textContent = C.families[lang];
   $('#inviteText').textContent = `${C.families[lang]} ${t('invite')}`;
@@ -218,10 +218,20 @@ function startMusic() {
 // A real scroll (mouse wheel or swipe) also tries to start it. Browsers that allow sound without a tap (for example after the
 // visitor has used the site before) will play it; the others refuse quietly and the first tap starts it instead.
 let lastScrollTry = 0;
-['wheel', 'touchmove'].forEach(ev => addEventListener(ev, () => {
+['wheel', 'touchmove', 'touchstart', 'scroll'].forEach(ev => addEventListener(ev, () => {
   const now = Date.now(); if (now - lastScrollTry < 1200) return; lastScrollTry = now;
   startMusic();
 }, { passive: true }));
+
+// Tap-to-open gate: the tap is the user gesture browsers require, so the music starts reliably.
+const gate = $('#gate');
+document.documentElement.classList.add('gated');
+$('#gateOpen').onclick = () => {
+  startMusic();
+  gate.classList.add('open'); document.documentElement.classList.remove('gated');
+  scrollTo({ top: 0, behavior: 'instant' });
+  setTimeout(() => gate.remove(), 1700);
+};
 
 // Stop the music when the page is hidden (browser minimised, app switched, tab changed) and bring it back on return.
 let resumeOnReturn = false;
@@ -252,7 +262,7 @@ function tweenTo(to, ms, done) {            // our own animation, so it always f
   })();
 }
 function peek() {
-  if (userMoved || peeking || scrollY > 4 || document.hidden || !cm.hidden) return;
+  if (userMoved || peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return;
   peeking = true;
   tweenTo(30, 420, ok => {
     if (!ok) { peeking = false; return; }
