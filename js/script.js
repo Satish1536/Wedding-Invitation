@@ -19,7 +19,7 @@ const CONFIG = {
     { name:{en:"Kaushal", hi:"कौशल"},    relation:{en:"Younger Brother of the Groom", hi:"वर के छोटे भाई"}, phone:"+918292418719" },
     { name:{en:"Mannu",   hi:"मन्नू"},    relation:{en:"Older Brother of the Groom",   hi:"वर के बड़े भाई"}, phone:"+916203936509" }
   ],
-  music: "music/jalandhar.mp3",
+  music: "music/wedding-music.mp3",
   gallery: [],
   // Events are date-only because times were not given. Add  time:{ en:"6:00 PM", hi:"सायं 6:00 बजे" }  to show a time.
   events: [
@@ -40,7 +40,7 @@ const CONFIG = {
 };
 
 const I18N = {
-  en:{ introSmall:"Shubh Vivah", introSub:"You are warmly invited", open:"Open invitation", tapStart:"Tap the circle to begin", contactsEyebrow:"Need help?", contactsTitle:"Contact us", contactsSub:"Copy a number, then paste it in your phone app to call.", copy:"Copy", copied:"Copied ✓", manual:"Now press Copy", tap:"Tap", together:"Together with their families",
+  en:{ introSmall:"Shubh Vivah", introSub:"You are warmly invited", open:"Open invitation", tapStart:"Touch or scroll to open", scrollLabel:"Scroll", contactsEyebrow:"Need help?", contactsTitle:"Contact us", contactsSub:"Copy a number, then paste it in your phone app to call.", copy:"Copy", copied:"Copied ✓", manual:"Now press Copy", tap:"Tap", together:"Together with their families",
     weds:"weds", scroll:"Scroll ↓", blessingsEyebrow:"With blessings", inviteHead:"Join us for the wedding",
     invite:"request the honour of your presence as we celebrate the union of our children, and seek your blessings as they begin their journey together.",
     countEyebrow:"Counting down", countHead:"Until the wedding day", days:"Days", hours:"Hours", mins:"Minutes", secs:"Seconds",
@@ -51,7 +51,7 @@ const I18N = {
     foot:"Your presence is the greatest blessing we could ask for.", with:"With love ·",
     sapEyebrow:"Seven sacred steps", sapHead:"Saptapadi", sapLead:"Around the holy fire, the couple takes seven steps together, each one a promise.",
     step:"Step", steps:["Nourishment","Strength","Prosperity","Happiness","Family","Long life","Friendship"] },
-  hi:{ introSmall:"शुभ विवाह", introSub:"आप सादर आमंत्रित हैं", open:"निमंत्रण खोलें", tapStart:"शुरू करने के लिए गोले को छुएँ", contactsEyebrow:"सहायता चाहिए?", contactsTitle:"संपर्क करें", contactsSub:"नंबर कॉपी करें, फिर फ़ोन ऐप में पेस्ट कर कॉल करें।", copy:"कॉपी", copied:"कॉपी हो गया ✓", manual:"अब कॉपी करें", tap:"छुएँ", together:"अपने परिवारों के साथ",
+  hi:{ introSmall:"शुभ विवाह", introSub:"आप सादर आमंत्रित हैं", open:"निमंत्रण खोलें", tapStart:"खोलने के लिए छुएँ या स्क्रॉल करें", scrollLabel:"नीचे स्क्रॉल करें", contactsEyebrow:"सहायता चाहिए?", contactsTitle:"संपर्क करें", contactsSub:"नंबर कॉपी करें, फिर फ़ोन ऐप में पेस्ट कर कॉल करें।", copy:"कॉपी", copied:"कॉपी हो गया ✓", manual:"अब कॉपी करें", tap:"छुएँ", together:"अपने परिवारों के साथ",
     weds:"परिणय", scroll:"नीचे जाएँ ↓", blessingsEyebrow:"आशीर्वाद सहित", inviteHead:"विवाह में पधारें",
     invite:"अपने बच्चों के विवाह के शुभ अवसर पर आपकी गरिमामयी उपस्थिति एवं आशीर्वाद की कामना करते हैं।",
     countEyebrow:"उलटी गिनती", countHead:"विवाह के दिन तक", days:"दिन", hours:"घंटे", mins:"मिनट", secs:"सेकंड",
@@ -131,11 +131,6 @@ function render() {
   $('#introG').textContent = g; $('#introB').textContent = b;
   $('#introDate').innerHTML = `<span class="dw">${fmt(wd,{weekday:'long'})}</span>${fmt(wd,{day:'numeric',month:'long',year:'numeric'})}`;
   $('#introCity').textContent = C.city[lang]; $('#introFam').textContent = C.families[lang];
-  $('#heroG').textContent = g; $('#heroB').textContent = b;
-  $('#hDay').textContent = fmt(wd,{weekday:'long'});
-  $('#hDate').textContent = wd.getDate();
-  $('#hMonth').textContent = fmt(wd,{month:'long'}) + ' ' + wd.getFullYear();
-  $('#hCity').textContent = C.city[lang];
   $('#inviteText').textContent = `${C.families[lang]} ${t('invite')}`;
   $('#cards').innerHTML = [C.groom,C.bride].map((p,i) =>
     `<div class="pcard reveal ${i?'r':'l'}"><div class="nm foil">${esc(p[lang])}</div><h3>${esc(lang==='hi'?p.fullHi:p.full)}</h3><p>${esc(p.parents[lang])}</p><p class="loc">${esc(p.place[lang])}</p></div>`).join('');
@@ -199,22 +194,48 @@ if ($('#allIcs')) $('#allIcs').onclick = () => {
 })();
 
 // music (optional)
-let audio = null;
+let audio = null, userPaused = false;
 const MUSIC_VOL = 0.22;   // soft background level (0 to 1)
 function fadeIn(){ if(!audio) return; audio.volume = 0; let v = 0; const s = setInterval(() => { v = Math.min(MUSIC_VOL, v + 0.01); audio.volume = v; if (v >= MUSIC_VOL) clearInterval(s); }, 120); }
 if (C.music) { audio = new Audio(C.music); audio.loop = true; audio.volume = 0; $('#mute').style.display = 'block';
-  $('#mute').onclick = () => { audio.paused ? (audio.play().then(fadeIn), $('#mute').textContent='♫') : (audio.pause(), $('#mute').textContent='♪'); }; }
+  $('#mute').onclick = () => {
+    if (audio.paused) { userPaused = false; audio.play().then(fadeIn).catch(() => {}); $('#mute').textContent = '♫'; }
+    else { userPaused = true; audio.pause(); $('#mute').textContent = '♪'; }
+  }; }
 
-// open intro: a tap anywhere on the first screen (or on the circle) opens the invitation
-let opened = false;
-const openInvite = () => {
-  if (opened) return; opened = true;
-  $('#intro').classList.add('open'); document.body.classList.remove('locked');
-  $('.arch').classList.add('in');
-  if (audio) audio.play().then(() => { $('#mute').textContent = '♫'; fadeIn(); }).catch(() => {});
-};
-$('#intro').addEventListener('click', openInvite);           // anywhere on the first screen
-$('#openBtn').addEventListener('click', openInvite);         // the circle itself (also works with the keyboard)
+// music starts as soon as the browser allows it; never restarts after the visitor mutes it
+function startMusic() {
+  if (!audio || userPaused || !audio.paused) return;
+  audio.play().then(() => { $('#mute').textContent = '♫'; fadeIn(); }).catch(() => {});
+}
+// Browsers only allow sound after a tap, click or key press. A scroll or swipe opens the page but cannot start sound,
+// so the next tap/click/key press starts the music.
+['click', 'touchend', 'pointerup', 'keydown'].forEach(ev => addEventListener(ev, startMusic, { passive: true }));
+
+/* ---------- first page: scroll cue ---------- */
+// The cover is just the top of the page (no overlay, no fade). Until the visitor scrolls, the page gives a small
+// "peek" every few seconds (it lifts a little, then settles back) so it is clear there is more below.
+let userMoved = false, peeking = false;
+['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, () => { userMoved = true; }, { passive: true }));
+const easeInOut = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+function tweenTo(to, ms, done) {            // our own animation, so it always finishes and never fights the visitor
+  const from = scrollY, t0 = performance.now();
+  (function step() {
+    if (userMoved) return done(false);       // the visitor took over: leave the page where they put it
+    const t = Math.min(1, (performance.now() - t0) / ms);
+    scrollTo({ top: from + (to - from) * easeInOut(t), behavior: 'instant' });
+    if (t < 1) requestAnimationFrame(step); else done(true);
+  })();
+}
+function peek() {
+  if (userMoved || peeking || scrollY > 4 || document.hidden || !cm.hidden) return;
+  peeking = true;
+  tweenTo(30, 420, ok => {
+    if (!ok) { peeking = false; return; }
+    setTimeout(() => tweenTo(0, 520, () => { peeking = false; }), 160);
+  });
+}
+setTimeout(() => { peek(); setInterval(peek, 5500); }, 2500);
 
 /* ---------- contacts pop-up: copy a number, paste it in the phone app ---------- */
 const fmtPhone = p => { const m = p.match(/^\+91(\d{5})(\d{5})$/); return m ? `+91 ${m[1]} ${m[2]}` : p; };

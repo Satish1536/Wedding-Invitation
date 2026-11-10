@@ -24,10 +24,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mukta:wght@300;400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="locked">
+<body>
 
-<!-- Intro: cover with names + details, round seal to tap -->
-<div id="intro">
+<!-- First page: the cover. Ordinary page content (no overlay, no fade) with a scroll cue at the bottom. -->
+<header id="intro">
+  <div id="petals"></div>
   <div class="cover">
     <div class="symbols"><svg viewBox="0 0 40 40" class="swastik"></svg><span class="om deva">ॐ</span><svg viewBox="0 0 40 40" class="swastik"></svg></div>
     <p class="ganesha foil">॥ श्री गणेशाय नमः ॥</p>
@@ -41,9 +42,8 @@
     </div>
     <p class="cfam" id="introFam"></p>
   </div>
-  <button class="seal" id="openBtn" aria-label="Tap to open the invitation"><span class="om deva">ॐ</span><small data-i18n="tap"></small></button>
-  <p class="taphint" data-i18n="tapStart"></p>
-</div>
+  <a class="scrollcue" href="#families" aria-label="Scroll down"><span data-i18n="scrollLabel"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7l7 7 7-7M5 13l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</header>
 
 <div class="toran" id="toran"><div class="rope"></div></div>
 <div class="lang" id="lang"><button data-l="en" class="on">English</button><button data-l="hi" class="deva">हिन्दी</button></div>
@@ -66,21 +66,6 @@
 </div>
 
 <main>
-  <header id="hero">
-    <div id="petals"></div>
-    <div class="arch reveal">
-      <div class="symbols"><svg viewBox="0 0 40 40" class="swastik"></svg><span class="om deva">ॐ</span><svg viewBox="0 0 40 40" class="swastik"></svg></div>
-      <p class="ganesha foil">॥ श्री गणेशाय नमः ॥</p>
-      <p class="kicker" data-i18n="together"></p>
-      <h1 class="names foil" id="heroG"></h1>
-      <p class="weds"><span data-i18n="weds"></span></p>
-      <h1 class="names foil" id="heroB"></h1>
-      <div class="datebox"><div class="s" id="hDay"></div><div class="d foil" id="hDate"></div><div class="s" id="hMonth"></div></div>
-      <p class="place" id="hCity"></p>
-      <p class="scrollhint" data-i18n="scroll"></p>
-    </div>
-  </header>
-
   <section id="families" class="cream">
     <div class="wrap">
       <p class="eyebrow" data-i18n="blessingsEyebrow"></p>
