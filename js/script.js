@@ -267,7 +267,7 @@ const HOP_GAP = 2500;   // constant pause between hops (ms), counted from when a
 function peek(done) {
   if (peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return done();   // keeps hopping until the visitor scrolls down
   userMoved = false; peeking = true;
-  tweenTo(56, 380, ok => {
+  tweenTo(100, 450, ok => {
     if (!ok) { peeking = false; return done(); }
     setTimeout(() => tweenTo(0, 520, () => { peeking = false; done(); }), 160);
   });
