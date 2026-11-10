@@ -230,7 +230,7 @@ $('#gateOpen').onclick = () => {
   startMusic();
   gate.classList.add('open'); document.documentElement.classList.remove('gated');
   scrollTo({ top: 0, behavior: 'instant' });
-  setTimeout(() => gate.remove(), 1700);
+  setTimeout(() => { gate.remove(); userMoved = false; hopLoop(); }, 1700);   // the opening tap isn't a scroll: reset, then hop once to hint there is more below
 };
 
 // Stop the music when the page is hidden (browser minimised, app switched, tab changed) and bring it back on return.
@@ -250,7 +250,7 @@ addEventListener('pagehide', () => { if (audio) audio.pause(); });
 // The cover is just the top of the page (no overlay, no fade). Until the visitor scrolls, the page gives a small
 // "peek" every few seconds (it lifts a little, then settles back) so it is clear there is more below.
 let userMoved = false, peeking = false;
-['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, () => { userMoved = true; }, { passive: true }));
+['wheel', 'touchmove', 'keydown'].forEach(ev => addEventListener(ev, () => { userMoved = true; }, { passive: true }));   // only a real scroll attempt interrupts a hop
 const easeInOut = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 function tweenTo(to, ms, done) {            // our own animation, so it always finishes and never fights the visitor
   const from = scrollY, t0 = performance.now();
@@ -261,15 +261,16 @@ function tweenTo(to, ms, done) {            // our own animation, so it always f
     if (t < 1) requestAnimationFrame(step); else done(true);
   })();
 }
-function peek() {
-  if (userMoved || peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return;
-  peeking = true;
-  tweenTo(30, 420, ok => {
-    if (!ok) { peeking = false; return; }
-    setTimeout(() => tweenTo(0, 520, () => { peeking = false; }), 160);
+const HOP_GAP = 2500;   // constant pause between hops (ms), counted from when a hop finishes
+function peek(done) {
+  if (peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return done();   // keeps hopping until the visitor scrolls down
+  userMoved = false; peeking = true;
+  tweenTo(56, 380, ok => {
+    if (!ok) { peeking = false; return done(); }
+    setTimeout(() => tweenTo(0, 520, () => { peeking = false; done(); }), 160);
   });
 }
-setTimeout(() => { peek(); setInterval(peek, 5500); }, 2500);
+const hopLoop = () => peek(() => setTimeout(hopLoop, HOP_GAP));
 
 /* ---------- contacts pop-up: copy a number, paste it in the phone app ---------- */
 const fmtPhone = p => { const m = p.match(/^\+91(\d{5})(\d{5})$/); return m ? `+91 ${m[1]} ${m[2]}` : p; };
