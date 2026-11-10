@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aarav & Meera · Shubh Vivah</title>
+<meta name="theme-color" content="#5a0d10">
+<meta name="description" content="You are warmly invited to the wedding of Satish & Bharti · 4 December 2026 · Araria, Bihar">
+<!-- WhatsApp / social preview. After you put the site online, change og:image and og:url to the full https:// address,
+     e.g. https://your-site.example/share.jpg . WhatsApp ignores relative paths. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Satish weds Bharti · Shubh Vivah">
+<meta property="og:description" content="You are warmly invited · 4 December 2026 · Araria, Bihar">
+<meta property="og:image" content="share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Wedding invitation card: Satish weds Bharti, 4 December 2026, Araria, Bihar">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Mukta:wght@300;400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="locked">
+
+<!-- Intro: cover with names + details, round seal to tap -->
+<div id="intro">
+  <div class="cover">
+    <div class="symbols"><svg viewBox="0 0 40 40" class="swastik"></svg><span class="om deva">ॐ</span><svg viewBox="0 0 40 40" class="swastik"></svg></div>
+    <p class="ganesha foil">॥ श्री गणेशाय नमः ॥</p>
+    <div class="coverarch">
+      <p class="small" data-i18n="introSmall"></p>
+      <h1 class="cn foil" id="introG"></h1>
+      <p class="weds"><span data-i18n="weds"></span></p>
+      <h1 class="cn foil" id="introB"></h1>
+      <p class="cdate" id="introDate"></p>
+      <p class="place" id="introCity"></p>
+    </div>
+    <p class="cfam" id="introFam"></p>
+  </div>
+  <button class="seal" id="openBtn" aria-label="Tap to open the invitation"><span class="om deva">ॐ</span><small data-i18n="tap"></small></button>
+  <p class="taphint" data-i18n="tapStart"></p>
+</div>
+
+<div class="toran" id="toran"><div class="rope"></div></div>
+<div class="lang" id="lang"><button data-l="en" class="on">English</button><button data-l="hi" class="deva">हिन्दी</button></div>
+<button class="mute" id="mute" aria-label="Music">♪</button>
+<a class="wa" id="waBtn" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" title="WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3.2C9 3.2 3.3 8.8 3.3 15.7c0 2.4.7 4.7 1.900 6.600L3.200 28.800l6.700-1.800c1.800 1 3.900 1.500 6.100 1.500 7 0 12.700-5.600 12.700-12.500S23 3.200 16 3.200Zm0 22.900c-1.900 0-3.800-.5-5.400-1.500l-.4-.2-4 1.100 1.100-3.800-.3-.4a10 10 0 0 1-1.600-5.400C5.400 10.600 10.200 6 16 6s10.600 4.600 10.600 10.300S21.800 26.100 16 26.100Z"/><path fill="#fff" d="M21.600 18.800c-.3-.2-1.800-.9-2.100-1-.3-.1-.5-.2-.7.200-.2.300-.8 1-1 1.200-.2.200-.4.200-.7.100a8.300 8.300 0 0 1-4.100-3.600c-.3-.6.300-.5.900-1.700.1-.2.100-.4 0-.6l-1-2.300c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.100-.9.400-.3.300-1.200 1.200-1.200 2.800s1.200 3.300 1.400 3.500c.2.200 2.400 3.700 5.800 5.100 2.100.9 3 1 4 .8.600-.1 1.800-.7 2-1.400.3-.7.300-1.300.2-1.400-.1-.2-.3-.3-.6-.4Z"/></svg>
+</a>
+
+<button class="fab contact" id="contactBtn" aria-label="Contact numbers" aria-haspopup="dialog" title="Contacts">
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.4 7-5.4s6.2 1.8 7 5.4"/></svg>
+</button>
+<div class="cmodal" id="cmodal" hidden role="dialog" aria-modal="true" aria-labelledby="cTitle">
+  <div class="csheet">
+    <button class="cclose" id="cClose" type="button" aria-label="Close">&times;</button>
+    <p class="eyebrow" data-i18n="contactsEyebrow"></p>
+    <h2 id="cTitle" data-i18n="contactsTitle"></h2>
+    <p class="clead" data-i18n="contactsSub"></p>
+    <div id="clist"></div>
+  </div>
+</div>
+
+<main>
+  <header id="hero">
+    <div id="petals"></div>
+    <div class="arch reveal">
+      <div class="symbols"><svg viewBox="0 0 40 40" class="swastik"></svg><span class="om deva">ॐ</span><svg viewBox="0 0 40 40" class="swastik"></svg></div>
+      <p class="ganesha foil">॥ श्री गणेशाय नमः ॥</p>
+      <p class="kicker" data-i18n="together"></p>
+      <h1 class="names foil" id="heroG"></h1>
+      <p class="weds"><span data-i18n="weds"></span></p>
+      <h1 class="names foil" id="heroB"></h1>
+      <div class="datebox"><div class="s" id="hDay"></div><div class="d foil" id="hDate"></div><div class="s" id="hMonth"></div></div>
+      <p class="place" id="hCity"></p>
+      <p class="scrollhint" data-i18n="scroll"></p>
+    </div>
+  </header>
+
+  <section id="families" class="cream">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="blessingsEyebrow"></p>
+      <h2 data-i18n="inviteHead"></h2>
+      <div class="divider"><svg class="lotus" viewBox="0 0 100 100"></svg></div>
+      <p class="shloka">सर्वमङ्गलमाङ्गल्ये शिवे सर्वार्थसाधिके ।<br>शरण्ये त्र्यम्बके गौरि नारायणि नमोऽस्तु ते ॥</p>
+      <p class="lead" id="inviteText" style="margin-top:22px"></p>
+      <div class="cards" id="cards"></div>
+    </div>
+  </section>
+
+  <section id="countdown" class="red">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="countEyebrow"></p>
+      <h2 data-i18n="countHead"></h2>
+      <div class="count">
+        <div><b id="cd">--</b><span data-i18n="days"></span></div><div><b id="ch">--</b><span data-i18n="hours"></span></div>
+        <div><b id="cm">--</b><span data-i18n="mins"></span></div><div><b id="cs">--</b><span data-i18n="secs"></span></div>
+      </div>
+      <div class="diyas" id="diyas"></div>
+      <span class="muhurat" id="muhurat"></span>
+    </div>
+  </section>
+
+  <section id="events" class="cream">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="evEyebrow"></p>
+      <h2 data-i18n="evHead"></h2>
+      <div class="divider"><svg class="lotus" viewBox="0 0 100 100"></svg></div>
+      <div class="tl" id="tl"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p class="sh deva foil">शुभं भवतु</p>
+  <p class="nm foil" id="fNames"></p>
+  <p class="tag" id="fTag"></p>
+  <p data-i18n="foot"></p>
+  <p style="margin-top:14px;opacity:.75" id="fFam"></p>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>

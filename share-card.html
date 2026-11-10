@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Share card (1200x630)</title>
+<!-- Source for share.jpg, the WhatsApp preview image. Open at 1200x630 and take a screenshot to regenerate it. -->
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Great+Vibes&family=Mukta:wght@500;600&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<style>
+:root{--maroon:#5a0d10;--maroon-2:#36070a;--gold:#d6a03a;--gold-2:#f6dc8c;--haldi:#f4b41a;
+  --foil:linear-gradient(100deg,#b8791a 0%,#ffe9a6 30%,#d6a03a 50%,#fff3c0 68%,#b8791a 100%);
+  --paisley:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none' stroke='%23d6a03a' stroke-width='1'%3E%3Cpath d='M40 7C60 15 65 45 45 64 35 74 17 67 17 52 17 37 33 35 35 25 36 18 38 12 40 7Z' opacity='.5'/%3E%3Cpath d='M40 22C49 29 50 45 41 54 35 59 27 56 27 48' opacity='.4'/%3E%3Ccircle cx='40' cy='40' r='2.2' fill='%23f4b41a' stroke='none'/%3E%3Cpath d='M0 0l4 4M80 0l-4 4M0 80l4-4M80 80l-4-4' opacity='.5'/%3E%3C/svg%3E")}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:630px;overflow:hidden}
+body{display:grid;place-items:center;font-family:'Mukta',sans-serif;color:#fff3da;
+  background:var(--paisley) 0 0/80px 80px,radial-gradient(ellipse at 50% 40%,#b82424,var(--maroon) 60%,var(--maroon-2))}
+.foil{background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
+.arch{width:450px;height:574px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-top:34px;
+  border:3px solid var(--gold);border-radius:225px 225px 18px 18px;background:linear-gradient(180deg,rgba(90,13,16,.9),rgba(54,7,10,.95));
+  box-shadow:0 0 0 8px var(--maroon-2),0 0 0 10px var(--gold),0 20px 60px rgba(0,0,0,.5);position:relative}
+.arch::before{content:"";position:absolute;inset:12px;border:1px dashed rgba(246,220,140,.55);border-radius:213px 213px 10px 10px}
+.om{font-family:'Tiro Devanagari Hindi',serif;font-size:42px;line-height:1;color:var(--haldi)}
+.gan{font-family:'Rozha One','Tiro Devanagari Hindi',serif;font-size:19px;margin:6px 0 14px}
+.sv{font-weight:600;font-size:15px;letter-spacing:.34em;text-transform:uppercase;color:var(--haldi)}
+.n{font-family:'Great Vibes',cursive;font-size:104px;line-height:1.02;padding:.12em .2em .1em;margin:-.04em 0}
+.w{font-family:'Great Vibes',cursive;font-size:30px;color:var(--haldi);display:flex;align-items:center;gap:14px;margin:-6px 0}
+.w::before,.w::after{content:"";width:46px;height:1px;background:var(--gold)}
+.d{font-family:'Rozha One',serif;font-size:31px;color:var(--gold-2);margin-top:12px}
+.p{font-weight:600;font-size:15px;letter-spacing:.3em;text-transform:uppercase;color:var(--haldi);margin-top:6px}
+</style>
+</head>
+<body>
+  <div class="arch">
+    <div class="om">ॐ</div>
+    <div class="gan foil">॥ श्री गणेशाय नमः ॥</div>
+    <div class="sv">Shubh Vivah</div>
+    <div class="n foil">Satish</div>
+    <div class="w">weds</div>
+    <div class="n foil">Bharti</div>
+    <div class="d">4 December 2026</div>
+    <div class="p">Araria, Bihar</div>
+  </div>
+</body>
+</html>
