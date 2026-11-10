@@ -230,7 +230,7 @@ $('#gateOpen').onclick = () => {
   startMusic();
   gate.classList.add('open'); document.documentElement.classList.remove('gated');
   scrollTo({ top: 0, behavior: 'instant' });
-  setTimeout(() => { gate.remove(); userMoved = false; peek(); }, 1700);   // the opening tap isn't a scroll: reset, then hop once to hint there is more below
+  setTimeout(() => { gate.remove(); userMoved = false; hopLoop(); }, 1700);   // the opening tap isn't a scroll: reset, then hop once to hint there is more below
 };
 
 // Stop the music when the page is hidden (browser minimised, app switched, tab changed) and bring it back on return.
@@ -261,15 +261,16 @@ function tweenTo(to, ms, done) {            // our own animation, so it always f
     if (t < 1) requestAnimationFrame(step); else done(true);
   })();
 }
-function peek() {
-  if (peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return;   // keeps hopping until the visitor scrolls down
+const HOP_GAP = 2500;   // constant pause between hops (ms), counted from when a hop finishes
+function peek(done) {
+  if (peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return done();   // keeps hopping until the visitor scrolls down
   userMoved = false; peeking = true;
   tweenTo(56, 380, ok => {
-    if (!ok) { peeking = false; return; }
-    setTimeout(() => tweenTo(0, 520, () => { peeking = false; }), 160);
+    if (!ok) { peeking = false; return done(); }
+    setTimeout(() => tweenTo(0, 520, () => { peeking = false; done(); }), 160);
   });
 }
-setTimeout(() => { peek(); setInterval(peek, 5500); }, 2500);
+const hopLoop = () => peek(() => setTimeout(hopLoop, HOP_GAP));
 
 /* ---------- contacts pop-up: copy a number, paste it in the phone app ---------- */
 const fmtPhone = p => { const m = p.match(/^\+91(\d{5})(\d{5})$/); return m ? `+91 ${m[1]} ${m[2]}` : p; };
