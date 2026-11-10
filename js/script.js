@@ -250,7 +250,7 @@ addEventListener('pagehide', () => { if (audio) audio.pause(); });
 // The cover is just the top of the page (no overlay, no fade). Until the visitor scrolls, the page gives a small
 // "peek" every few seconds (it lifts a little, then settles back) so it is clear there is more below.
 let userMoved = false, peeking = false;
-['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, () => { userMoved = true; }, { passive: true }));
+['wheel', 'touchmove', 'keydown'].forEach(ev => addEventListener(ev, () => { userMoved = true; }, { passive: true }));   // only a real scroll attempt interrupts a hop
 const easeInOut = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 function tweenTo(to, ms, done) {            // our own animation, so it always finishes and never fights the visitor
   const from = scrollY, t0 = performance.now();
@@ -262,8 +262,8 @@ function tweenTo(to, ms, done) {            // our own animation, so it always f
   })();
 }
 function peek() {
-  if (userMoved || peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return;
-  peeking = true;
+  if (peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return;   // keeps hopping until the visitor scrolls down
+  userMoved = false; peeking = true;
   tweenTo(56, 380, ok => {
     if (!ok) { peeking = false; return; }
     setTimeout(() => tweenTo(0, 520, () => { peeking = false; }), 160);
