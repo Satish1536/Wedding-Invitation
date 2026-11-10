@@ -253,12 +253,14 @@ let userMoved = false, peeking = false;
 ['wheel', 'touchmove', 'keydown'].forEach(ev => addEventListener(ev, () => { userMoved = true; }, { passive: true }));   // only a real scroll attempt interrupts a hop
 const easeInOut = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 function tweenTo(to, ms, done) {            // our own animation, so it always finishes and never fights the visitor
-  const from = scrollY, t0 = performance.now();
+  const from = scrollY, t0 = performance.now(), root = document.documentElement;
+  root.style.scrollBehavior = 'auto';        // CSS html{scroll-behavior:smooth} makes phones (older iOS Safari) ignore 'instant' and swallow every frame
+  const end = ok => { root.style.scrollBehavior = ''; done(ok); };
   (function step() {
-    if (userMoved) return done(false);       // the visitor took over: leave the page where they put it
+    if (userMoved) return end(false);        // the visitor took over: leave the page where they put it
     const t = Math.min(1, (performance.now() - t0) / ms);
-    scrollTo({ top: from + (to - from) * easeInOut(t), behavior: 'instant' });
-    if (t < 1) requestAnimationFrame(step); else done(true);
+    scrollTo(0, from + (to - from) * easeInOut(t));
+    if (t < 1) requestAnimationFrame(step); else end(true);
   })();
 }
 const HOP_GAP = 2500;   // constant pause between hops (ms), counted from when a hop finishes
