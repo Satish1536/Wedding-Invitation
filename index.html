@@ -26,6 +26,16 @@
 </head>
 <body>
 
+<!-- Tap-to-open gate: two panels meet in the middle like a closed invitation card; the tap opens them and starts the music. -->
+<div id="gate" role="dialog" aria-modal="true" aria-label="Open invitation">
+  <div class="gpanel gl"></div><div class="gpanel gr"></div>
+  <button type="button" class="gseal" id="gateOpen" aria-label="Open invitation">
+    <span class="om deva">ॐ</span>
+    <span class="gnames foil" id="gateNames"></span>
+    <span class="gcta">Open invitation<span class="deva">निमंत्रण खोलें</span></span>
+  </button>
+</div>
+
 <!-- First page: the cover. Ordinary page content (no overlay, no fade) with a scroll cue at the bottom. -->
 <header id="intro">
   <div id="petals"></div>
