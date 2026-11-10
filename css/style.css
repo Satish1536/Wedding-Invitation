@@ -219,12 +219,6 @@ html[lang=hi] .cdate .dw{letter-spacing:0;text-transform:none;font-size:1rem}
 .coverarch .place{margin-top:2px;font-size:.88rem}
 .cfam{font-family:var(--f-serif);font-style:italic;font-weight:600;font-size:1.3rem;color:#fff3da;margin-top:clamp(12px,2.4vh,22px);line-height:1.35;text-shadow:0 1px 6px rgba(0,0,0,.65)}
 html[lang=hi] .cfam{font-style:normal;font-size:1rem}
-.seal{position:relative;flex:none;width:92px;height:92px;border-radius:50%;border:0;cursor:pointer;display:grid;place-content:center;justify-items:center;color:var(--maroon-2);
-  background:radial-gradient(circle at 35% 30%,#fff1b8,var(--gold) 55%,#9a6a14);
-  box-shadow:0 0 0 5px rgba(246,220,140,.22),0 0 0 6px var(--gold-2),0 0 44px rgba(246,220,140,.55);animation:orbpulse 2.4s ease-in-out infinite}
-.seal .om{font-size:2.1rem;line-height:1}
-.seal small{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700}
-html[lang=hi] .seal small{letter-spacing:0;text-transform:none;font-size:.8rem}
 .taphint{letter-spacing:.26em;text-transform:uppercase;font-size:.7rem;color:var(--haldi);font-weight:600;animation:bob 2s infinite}
 html[lang=hi] .taphint{letter-spacing:0;text-transform:none;font-size:.9rem}
 @keyframes orbpulse{50%{transform:scale(1.06);box-shadow:0 0 0 10px rgba(246,220,140,.14),0 0 0 11px var(--gold-2),0 0 70px rgba(246,220,140,.75)}}
@@ -294,3 +288,13 @@ html[lang=hi] .ccopy{font-size:.8rem}
 html,body{overflow-x:hidden;max-width:100%}
 #hero{position:relative}            /* its decorative ring was positioned against the screen, not the section */
 section,footer{overflow-x:clip}     /* slide-in animations can never widen the page */
+
+/* ---- First page: normal page content with a scroll cue (no overlay, no reveal) ---- */
+#intro{position:relative;inset:auto;z-index:auto;min-height:100vh;min-height:100svh;padding:84px 14px 100px;overflow:hidden;cursor:auto;clip-path:none;transition:none}
+#intro>.cover{position:relative;z-index:1}
+.scrollcue{position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:0;
+  color:var(--gold-2);text-decoration:none;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600;padding:6px 14px}
+html[lang=hi] .scrollcue{letter-spacing:0;text-transform:none;font-size:.9rem}
+.scrollcue svg{width:30px;height:30px;animation:cuebounce 1.6s ease-in-out infinite}
+.scrollcue:focus-visible{outline:2px solid var(--haldi);outline-offset:2px;border-radius:8px}
+@keyframes cuebounce{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(10px);opacity:1}}
