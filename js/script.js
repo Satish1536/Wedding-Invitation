@@ -230,7 +230,7 @@ $('#gateOpen').onclick = () => {
   startMusic();
   gate.classList.add('open'); document.documentElement.classList.remove('gated');
   scrollTo({ top: 0, behavior: 'instant' });
-  setTimeout(() => gate.remove(), 1700);
+  setTimeout(() => { gate.remove(); userMoved = false; peek(); }, 1700);   // the opening tap isn't a scroll: reset, then hop once to hint there is more below
 };
 
 // Stop the music when the page is hidden (browser minimised, app switched, tab changed) and bring it back on return.
@@ -264,7 +264,7 @@ function tweenTo(to, ms, done) {            // our own animation, so it always f
 function peek() {
   if (userMoved || peeking || scrollY > 4 || document.hidden || !cm.hidden || gate.isConnected) return;
   peeking = true;
-  tweenTo(30, 420, ok => {
+  tweenTo(56, 380, ok => {
     if (!ok) { peeking = false; return; }
     setTimeout(() => tweenTo(0, 520, () => { peeking = false; }), 160);
   });
